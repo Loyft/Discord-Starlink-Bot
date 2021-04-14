@@ -1,26 +1,37 @@
 import time
 import discord
 from discord.ext import commands, tasks
+from pr0_commands import get_pr0_posts
 from reddit_commands import *
 from datetime import datetime
 
 TOKEN = discord_bot_token
+CHAN_SPACE = discord_channel_space_id
+CHAN_SPACEX = discord_channel_spacex_id
+CHAN_NASA = discord_channel_nasa_id
+CHAN_WELT = discord_channel_welt_id
 
 bot = commands.Bot(command_prefix="_")
 
 
+# On Start up
 @bot.event
 async def on_ready():
     guilds = list(bot.guilds)
     print(f"{bot.user} has connected to:\n")
     for n in range(len(guilds)):
         print(" " + guilds[n-1].name)
+    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="the Stars ✨"))
+
+    # Wait 1min before starting tasks to fetch news
+    time.sleep(60)
     top_post_space.start()
     top_post_spacex.start()
     top_post_nasa.start()
-    await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="the Stars ✨"))
+    pr0_weltraum.start()
 
 
+# Commands
 @bot.command(name="inv", help="Shows invite link for Starlink Bot")
 async def inv(ctx):
     print(f"{ctx.guild}: {ctx.author} = {ctx.message.content}")
@@ -33,63 +44,59 @@ async def inv(ctx):
 async def space(ctx):
     print(f"{ctx.guild}: {ctx.author} = {ctx.message.content}")
     h_post = get_top("space", "day")
-    name = h_post.title
     url = h_post.url
-    em = discord.Embed(title=name, description=url, color=0x4964d0)
-    em.set_image(url=url)
-    await ctx.send(embed=em)
+    await ctx.send(url)
 
 
-@bot.command(name="help", help="Shows Starlink Bot info")
+@bot.command(name="info", help="Shows Starlink Bot info")
 async def commands(ctx):
     current_time = str(datetime.now()).split(".")[0]
     print(f"[{current_time}] {ctx.guild}: {ctx.author} = {ctx.message.content}")
-    desc_text = "**prefix: _**\n\n_commands: Shows commands for Starlink Bot\n_inv:  Shows invite link for Starlink Bot"
-    em = discord.Embed(description=desc_text, color=0x4964d0)
-    em.set_author(name="Commands")
-    em.set_footer(text="Starlink Bot made with ♥️ by Loyft#6709")
+    em = discord.Embed(color=0x4964d0)
+    em.add_field(name="Commands", value="_info\n_inv", inline=False)
+    em.add_field(name="News", value="gets the newest top posts from r/space, r/spacex and r/nasa", inline=False)
+    em.add_field(name="About", value="made with ♥️ by Loyft#6709", inline=False)
+    em.set_footer(text="https://github.com/Mizuyi/Discord-Starlink-Bot")
     await ctx.send(embed=em)
 
 
-# Get Space subreddit top post past 8 hours
-@tasks.loop(hours=8)
+# Scheduled events
+# Get pr0 weltraum posts every 10 hours
+@tasks.loop(hours=10)
+async def pr0_weltraum():
+    url_list = get_pr0_posts()
+    weltraum_channel = bot.get_channel(CHAN_WELT)
+    for item in url_list:
+        await weltraum_channel.send(item)
+
+
+# Get Space subreddit top post past 15 hours
+@tasks.loop(hours=15)
 async def top_post_space():
-    time.sleep(1800)
     space_top = get_top("space", "day")
     if space_top:
-        space_name = space_top.title
         space_url = space_top.url
-        space_em = discord.Embed(title=space_name, description=space_url, color=0x4964d0)
-        space_em.set_image(url=space_url)
-        space_channel = bot.get_channel(831215986782371880)
-        await space_channel.send(embed=space_em)
+        space_channel = bot.get_channel(CHAN_SPACE)
+        await space_channel.send(space_url)
 
 
-# Get SpaceX subreddit top post past 8 hours
-@tasks.loop(hours=36)
+# Get SpaceX subreddit top post past 35 hours
+@tasks.loop(hours=35)
 async def top_post_spacex():
-    time.sleep(1800)
     spacex_top = get_top("spacex", "week")
     if spacex_top:
-        spacex_name = spacex_top.title
         spacex_url = spacex_top.url
-        spacex_em = discord.Embed(title=spacex_name, description=spacex_url, color=0x4964d0)
-        spacex_em.set_image(url=spacex_url)
-        spacex_channel = bot.get_channel(831216182941057145)
-        await spacex_channel.send(embed=spacex_em)
+        spacex_channel = bot.get_channel(CHAN_SPACEX)
+        await spacex_channel.send(embed=spacex_url)
 
 
-# Get SpaceX subreddit top post past 8 hours
-@tasks.loop(hours=12)
+# Get SpaceX subreddit top post past 15 hours
+@tasks.loop(hours=15)
 async def top_post_nasa():
-    time.sleep(1800)
     nasa_top = get_top("nasa", "week")
     if nasa_top:
-        nasa_name = nasa_top.title
         nasa_url = nasa_top.url
-        nasa_em = discord.Embed(title=nasa_name, description=nasa_url, color=0x4964d0)
-        nasa_em.set_image(url=nasa_url)
-        nasa_channel = bot.get_channel(831216264105295912)
-        await nasa_channel.send(embed=nasa_em)
+        nasa_channel = bot.get_channel(CHAN_NASA)
+        await nasa_channel.send(embed=nasa_url)
 
 bot.run(TOKEN)

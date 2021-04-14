@@ -5,7 +5,6 @@ from keys import *
 R_CLIENT_ID = reddit_client_id
 R_CLIENT_SECRET = reddit_client_secret
 R_USERNAME = reddit_username
-R_PASSWORD = reddit_password
 R_USER_AGENT = reddit_user_agent
 
 reddit = praw.Reddit(client_id=R_CLIENT_ID,
