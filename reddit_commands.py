@@ -9,7 +9,8 @@ R_USER_AGENT = reddit_user_agent
 
 reddit = praw.Reddit(client_id=R_CLIENT_ID,
                      client_secret=R_CLIENT_SECRET,
-                     user_agent=R_USER_AGENT)
+                     user_agent=R_USER_AGENT,
+                     check_for_async=False)
 
 
 def get_top(sub_red, interval):
@@ -17,7 +18,7 @@ def get_top(sub_red, interval):
 
     current_top_score = 0
     top_sub = {}
-    with open("past_reddit_posts.json") as past_reddit_posts_file:
+    with open("rehposts.json") as past_reddit_posts_file:
         data = json.load(past_reddit_posts_file)
         temp = data[str(sub_red)]
         for submission in subreddit:
@@ -26,12 +27,12 @@ def get_top(sub_red, interval):
                     top_sub = submission
                     current_top_score = submission.score
 
-    data_to_save = {
-        str(sub_red): top_sub.url
-    }
-    temp.append(data_to_save[str(sub_red)])
+                    data_to_save = {
+                        str(sub_red): top_sub.url
+                    }
+                    temp.append(data_to_save[str(sub_red)])
 
-    with open("past_reddit_posts.json", "w") as past_reddit_posts_file:
-        json.dump(data, past_reddit_posts_file)
+                    with open("rehposts.json", "w") as past_reddit_posts_file:
+                        json.dump(data, past_reddit_posts_file)
 
     return top_sub

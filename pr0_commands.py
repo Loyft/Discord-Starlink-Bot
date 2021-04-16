@@ -9,7 +9,7 @@ WELTRAUM = "weltraumgedöns"
 def get_pr0_posts():
     chrome_driver_path = "/Users/basti/Development/chromedriver"
     driver = webdriver.Chrome(executable_path=chrome_driver_path)
-
+    driver.minimize_window()
     driver.get(f"{PR0_URL}new/{WELTRAUM}")
 
     # Finding id's of latest posts
@@ -21,7 +21,7 @@ def get_pr0_posts():
 
     # Loading rehposts from json
     url_list = []
-    with open("reh.json") as reh_file:
+    with open("rehposts.json") as reh_file:
         reh_data = json.load(reh_file)
         temp = reh_data["rehs"]
         new_ids = []
@@ -42,7 +42,7 @@ def get_pr0_posts():
             "rehs": new_ids[n]
         }
         temp.append(data_to_save["rehs"])
-        with open("reh.json", "w") as reh_file:
+        with open("rehposts.json", "w") as reh_file:
             json.dump(reh_data, reh_file)
 
     return url_list
