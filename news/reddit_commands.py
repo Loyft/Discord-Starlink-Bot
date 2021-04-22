@@ -18,7 +18,7 @@ def get_top(sub_red, interval):
 
     current_top_score = 0
     top_sub = {}
-    with open("rehposts.json") as past_reddit_posts_file:
+    with open("news/rehposts.json") as past_reddit_posts_file:
         data = json.load(past_reddit_posts_file)
         temp = data[str(sub_red)]
         for submission in subreddit:
@@ -32,7 +32,7 @@ def get_top(sub_red, interval):
                     }
                     temp.append(data_to_save[str(sub_red)])
 
-                    with open("rehposts.json", "w") as past_reddit_posts_file:
+                    with open("news/rehposts.json", "w") as past_reddit_posts_file:
                         json.dump(data, past_reddit_posts_file)
 
     return top_sub

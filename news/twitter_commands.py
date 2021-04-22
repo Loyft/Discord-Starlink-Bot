@@ -15,7 +15,7 @@ def get_tweets(t_user):
     user_id = user._json["id"]
     latest_tweets = api.user_timeline(user_id=user_id, count=5, exclude_replies="true", include_trs="true")
 
-    with open("rehposts.json") as reh_file:
+    with open("news/rehposts.json") as reh_file:
         reh_data = json.load(reh_file)
         temp = reh_data["tweets_elon"]
 
@@ -31,7 +31,7 @@ def get_tweets(t_user):
                     "tweets_elon": str(new_ids[n])
                 }
                 temp.append(data_to_save["tweets_elon"])
-                with open("rehposts.json", "w") as reh_file:
+                with open("news/rehposts.json", "w") as reh_file:
                     json.dump(reh_data, reh_file)
 
     return tweet_list

@@ -1,9 +1,9 @@
 import time
 import discord
 from discord.ext import commands, tasks
-from pr0_commands import get_pr0_posts
-from reddit_commands import *
-from twitter_commands import get_tweets
+from news.pr0_commands import get_pr0_posts
+from news.reddit_commands import *
+from news.twitter_commands import get_tweets
 from iss import get_iss_pos
 from datetime import datetime
 from reactions import check_for_reaction
@@ -25,7 +25,7 @@ async def on_ready():
         print("  " + guilds[n-1].name)
     await bot.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name="the Stars ✨"))
 
-    # Wait 1min before starting tasks to fetch news
+    # Wait 10 seconds before starting tasks to fetch news
     time.sleep(10)
     top_post_spacex.start()
     pr0_weltraum.start()
@@ -53,6 +53,23 @@ async def inv(ctx):
     print(f">> {response}")
 
 
+@bot.command(name="poll", help="Creates a poll.")
+async def poll(ctx):
+    print(f"{ctx.guild}: {ctx.author} = {ctx.message.content}")
+    poll_message_separate = ctx.message.content.split(",")
+    poll_question_list = poll_message_separate[0].split(" ")[1:]
+    poll_question = ' '.join(poll_question_list)
+    poll_answers = poll_message_separate[1:]
+    print(poll_question)
+
+    em = discord.Embed(title="🗳", color=0x4964d0)
+    em.add_field(name="POLL", value=f"{poll_question}")
+    msg = await ctx.channel.send(embed=em)
+    for answer in poll_answers:
+        react_answer = answer.replace(" ", "")
+        await msg.add_reaction(f"{react_answer}")
+
+
 @bot.command(name="iss")
 async def iss(ctx):
     print(f"{ctx.guild}: {ctx.author} = {ctx.message.content}")
@@ -68,11 +85,12 @@ async def commands(ctx):
     current_time = str(datetime.now()).split(".")[0]
     print(f"[{current_time}] {ctx.guild}: {ctx.author} = {ctx.message.content}")
     em = discord.Embed(color=0x4964d0)
-    em.add_field(name="Commands", value="_info\n_inv\n_iss", inline=False)
+    em.add_field(name="Commands", value="_info\n_iss\n_poll", inline=False)
     em.add_field(name="News", value="gets top space info from various news sources", inline=False)
     em.add_field(name="ISS", value="gets the current ISS location", inline=False)
+    em.add_field(name="Poll", value="Creates a poll. (answers must be emotes)\nFormat: '_poll <question>, <answer1>, <answer2>'\nExample: _poll Yes or No?, 👍, 👎", inline=False)
     em.add_field(name="About", value="made with ♥️ by Loyft#6709", inline=False)
-    em.set_footer(text="https://github.com/Mizuyi/Discord-Starlink-Bot")
+    em.set_footer(text="https://github.com/Loyft/Discord-Starlink-Bot")
     await ctx.send(embed=em)
 
 
