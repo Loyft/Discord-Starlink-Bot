@@ -1,4 +1,5 @@
 from selenium import webdriver
+from keys import chrome_driver_path_location
 import json
 import time
 
@@ -7,7 +8,7 @@ WELTRAUM = "weltraumgedöns"
 
 
 def get_pr0_posts():
-    chrome_driver_path = "/Users/basti/Development/chromedriver"
+    chrome_driver_path = chrome_driver_path_location
     driver = webdriver.Chrome(executable_path=chrome_driver_path)
     # driver.minimize_window()
     driver.get(f"{PR0_URL}new/{WELTRAUM}")
@@ -43,6 +44,6 @@ def get_pr0_posts():
         }
         temp.append(data_to_save["rehs"])
         with open("news/rehposts.json", "w") as reh_file:
-            json.dump(reh_data, reh_file)
+            json.dump(reh_data, reh_file, indent=4)
 
     return url_list

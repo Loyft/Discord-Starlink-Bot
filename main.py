@@ -4,7 +4,8 @@ from discord.ext import commands, tasks
 from news.pr0_commands import get_pr0_posts
 from news.reddit_commands import *
 from news.twitter_commands import get_tweets
-from iss import get_iss_pos
+from levels.level import handle_exp, get_lvl
+from commands.iss import get_iss_pos
 from datetime import datetime
 from reactions import check_for_reaction
 
@@ -35,11 +36,16 @@ async def on_ready():
 # On message
 @bot.event
 async def on_message(message):
+
+    # Check for reaction
     reaction = check_for_reaction(message.content)
     if reaction:
         await message.add_reaction(reaction)
     else:
         pass
+
+    # Handle Exp
+    await handle_exp(message)
 
     await bot.process_commands(message)
 
@@ -51,6 +57,12 @@ async def inv(ctx):
     response = "https://discord.com/oauth2/authorize?client_id=830872756198309951&scope=bot"
     await ctx.send(response)
     print(f">> {response}")
+
+
+@bot.command(name="lvl", help="Shows current level")
+async def inv(ctx):
+    print(f"{ctx.guild}: {ctx.author} = {ctx.message.content}")
+    await get_lvl(ctx)
 
 
 @bot.command(name="poll", help="Creates a poll.")
@@ -85,10 +97,11 @@ async def commands(ctx):
     current_time = str(datetime.now()).split(".")[0]
     print(f"[{current_time}] {ctx.guild}: {ctx.author} = {ctx.message.content}")
     em = discord.Embed(color=0x4964d0)
-    em.add_field(name="Commands", value="_info\n_iss\n_poll", inline=False)
+    em.add_field(name="Commands", value="_info\n_iss\n_poll\n_lvl", inline=False)
     em.add_field(name="News", value="gets top space info from various news sources", inline=False)
     em.add_field(name="ISS", value="gets the current ISS location", inline=False)
     em.add_field(name="Poll", value="Creates a poll. (answers must be emotes)\nFormat: '_poll <question>, <answer1>, <answer2>'\nExample: _poll Yes or No?, 👍, 👎", inline=False)
+    em.add_field(name="Level", value="Level System: gain experience for activity on the server\nand level up to get exclusive roles.")
     em.add_field(name="About", value="made with ♥️ by Loyft#6709", inline=False)
     em.set_footer(text="https://github.com/Loyft/Discord-Starlink-Bot")
     await ctx.send(embed=em)

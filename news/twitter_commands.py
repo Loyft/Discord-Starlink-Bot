@@ -32,6 +32,6 @@ def get_tweets(t_user):
                 }
                 temp.append(data_to_save["tweets_elon"])
                 with open("news/rehposts.json", "w") as reh_file:
-                    json.dump(reh_data, reh_file)
+                    json.dump(reh_data, reh_file, indent=4)
 
     return tweet_list

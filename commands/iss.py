@@ -6,7 +6,6 @@ POS_ENDPOINT = "http://api.positionstack.com/v1"
 
 
 def get_iss_pos():
-    print("hi")
     req = urllib.request.Request("http://api.open-notify.org/iss-now.json")
     response = urllib.request.urlopen(req)
     obj = json.loads(response.read())

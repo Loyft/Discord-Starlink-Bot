@@ -32,7 +32,7 @@ def get_top(sub_red, interval):
                     }
                     temp.append(data_to_save[str(sub_red)])
 
-                    with open("news/rehposts.json", "w") as past_reddit_posts_file:
-                        json.dump(data, past_reddit_posts_file)
+                    with open("news/rehposts.json", "w") as f:
+                        json.dump(data, f, indent=4)
 
     return top_sub

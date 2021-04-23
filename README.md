@@ -11,7 +11,8 @@ Command | Response
 ------- | --------
 _info   | Shows info about Starlink Bot
 _iss    | Gets the current location of the ISS
-_poll   | Creats a Poll
+_lvl    | Shows the current level and xp
+_poll   | Creates a Poll
 
 #### News
 
@@ -20,6 +21,19 @@ Starlink Bot automatically gets new top posts from reddit, collects images/video
 ### ISS
 
 Gets the current location of the ISS with latitude and longitude.
+
+Command: `_iss`
+
+![Starlink Bot ISS example](images/github_starlink_iss.png?raw=true "Title")
+
+
+### Level System
+
+Gather experience for activity on the Server. Level up and gain exclusive Roles and perks.
+
+Command: `_lvl`
+
+![Starlink Bot ISS example](images/github_starlink_lvl.png?raw=true "Title")
 
 ### Poll
 
@@ -32,6 +46,13 @@ Example: `_poll Do you want more polls? Yes or No, 👍, 👎`
 ![Starlink Bot Poll example](images/github_starlink_poll.png?raw=true "Title")
 
 #### Changelog
+- v0.4.0 - Level System
+  - added Level System
+    - users gain experience for activity
+    - automatic role assignment upon reaching different levels
+    - added command `_lvl` to get current lvl and xp
+  - better code structure
+  - updated info section
 - v0.3.1 - Cleanup
   - create polls
   - Code cleanup
