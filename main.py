@@ -4,6 +4,7 @@ from discord.ext import commands, tasks
 from news.pr0_commands import get_pr0_posts
 from news.reddit_commands import *
 from news.twitter_commands import get_tweets
+from news.insta_commands import get_insta_posts
 from levels.level import handle_exp, get_lvl
 from commands.iss import get_iss_pos
 from datetime import datetime
@@ -31,6 +32,7 @@ async def on_ready():
     top_post_spacex.start()
     pr0_weltraum.start()
     get_all_tweets.start()
+    get_insta.start()
 
 
 # On message
@@ -140,6 +142,19 @@ async def top_post_spacex():
         spacex_url = spacex_top.url
         spacex_channel = bot.get_channel(CHAN_SPACEX)
         await spacex_channel.send(spacex_url)
+    else:
+        pass
+
+
+# Get lilmayo poasts from insta every 5 hour
+@tasks.loop(hours=5)
+async def get_insta():
+    user = "lilmayo"
+    new_posts = get_insta_posts(user)
+    if new_posts:
+        lilmayo_channel = bot.get_channel(discord_channel_lilmayo)
+        for post in new_posts:
+            await lilmayo_channel.send(file=discord.File(f"lilmayo/{post}"))
     else:
         pass
 

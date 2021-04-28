@@ -16,7 +16,7 @@ _poll   | Creates a Poll
 
 #### News
 
-Starlink Bot automatically gets new top posts from reddit, collects images/videos from pr0gramm related to space, and shows current tweets from Elon Musk, posting each in their corresponding channels.
+Starlink Bot automatically gets new top posts from reddit, collects images/videos from pr0gramm and instagram related to space, and shows current tweets from Elon Musk, posting each in their corresponding channels.
 
 ### ISS
 
@@ -46,6 +46,9 @@ Example: `_poll Do you want more polls? Yes or No, 👍, 👎`
 ![Starlink Bot Poll example](images/github_starlink_poll.png?raw=true "Title")
 
 #### Changelog
+- v0.5.0 - lilmayo
+  - gets latest posts from lilmayo's instagram
+  - #ayylmao
 - v0.4.0 - Level System
   - added Level System
     - users gain experience for activity
